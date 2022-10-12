@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using E_Shelf_WebApi.Abstract;
+using E_Shelf_WebApi.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace E_Shelf_WebApi.Controllers
 {
@@ -6,16 +10,30 @@ namespace E_Shelf_WebApi.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetProducts()
+        private readonly IProductRepository _productRepository;
+
+        public ProductsController(IProductRepository productRepository)
         {
-            return Ok(new[] { new {Name = "Computer" , Price = 13000 }, new { Name = "Phone", Price = 12000 } });
+            _productRepository = productRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _productRepository.GetAllAsync();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProduct()
+        public async Task<IActionResult> GetById(int id)
         {
-            return Ok(new[] { new { Name = "Computer", Price = 12000 }});
+            var result = await _productRepository.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound(id);
+            }
+            return Ok(result);
         }
+
     }
 }
