@@ -8,5 +8,7 @@ namespace E_Shelf_WebApi.Abstract
     {
         public Task<List<Product>> GetAllAsync();
         public Task<Product> GetByIdAsync(int id);
+
+        public Task<Product> CreateAsync(Product product);
     }
 }

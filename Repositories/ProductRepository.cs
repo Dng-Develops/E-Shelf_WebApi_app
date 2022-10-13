@@ -16,6 +16,14 @@ namespace E_Shelf_WebApi.Repositories
             _context = context;
         }
 
+        public async Task<Product> CreateAsync(Product product)
+        {
+            await _context.AddAsync(product);
+            await _context.SaveChangesAsync();
+
+            return product;
+        }
+
         public async Task<List<Product>> GetAllAsync()
         {
             return await _context.Products.AsNoTracking().ToListAsync();

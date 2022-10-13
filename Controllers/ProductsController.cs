@@ -35,5 +35,11 @@ namespace E_Shelf_WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(Product product)
+        {
+            var addedProduct = await _productRepository.CreateAsync(product);
+            return Created(string.Empty, product);
+        }
     }
 }
