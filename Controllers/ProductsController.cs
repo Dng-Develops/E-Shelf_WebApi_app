@@ -41,5 +41,31 @@ namespace E_Shelf_WebApi.Controllers
             var addedProduct = await _productRepository.CreateAsync(product);
             return Created(string.Empty, product);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Product product)
+        {
+            var checkIfProductExists = await _productRepository.GetByIdAsync(product.Id);
+            if (checkIfProductExists == null)
+            {
+                return NotFound(product.Id);
+            }
+            await _productRepository.UpdateAsync(product);
+            return NoContent();
+
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var checkIfProductExists = await _productRepository.GetByIdAsync(id);
+            if (checkIfProductExists == null)
+            {
+                return NotFound(id);
+            }
+            await _productRepository.RemoveAsync(id);
+            return NoContent();
+        }
     }
 }
