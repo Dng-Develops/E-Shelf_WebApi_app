@@ -35,6 +35,15 @@ namespace E_Shelf_WebApi
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddControllers();
+
+            services.AddCors(cors =>
+            {
+                cors.AddPolicy("E-ShelfCorsPolicy", opt =>
+                {
+                    opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "E_Shelf_WebApi", Version = "v1" });
@@ -53,7 +62,11 @@ namespace E_Shelf_WebApi
 
             app.UseRouting();
 
+            app.UseCors("E-ShelfCorsPolicy");
+
             app.UseAuthorization();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {

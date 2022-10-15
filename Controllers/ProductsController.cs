@@ -1,11 +1,16 @@
 ﻿using E_Shelf_WebApi.Abstract;
 using E_Shelf_WebApi.Data.Entities;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace E_Shelf_WebApi.Controllers
 {
+    [EnableCors]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
@@ -67,5 +72,16 @@ namespace E_Shelf_WebApi.Controllers
             await _productRepository.RemoveAsync(id);
             return NoContent();
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload(IFormFile formFile)
+        {
+            var newName = Guid.NewGuid() + "." + Path.GetExtension(formFile.FileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", newName);
+            var stream = new FileStream(path, FileMode.Create);
+            await formFile.CopyToAsync(stream);
+            return Created(string.Empty, formFile);
+        }
     }
 }
+ 
