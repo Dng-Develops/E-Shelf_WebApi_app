@@ -34,7 +34,9 @@ namespace E_Shelf_WebApi
 
             services.AddScoped<IProductRepository, ProductRepository>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt => { 
+            opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             services.AddCors(cors =>
             {
